@@ -1,0 +1,138 @@
+import os
+
+# Lista para armazenar os contatos
+contatos = []
+
+# Função para exibir o menu de opções
+def exibir_menu():
+    print("\n--- Menu ---")
+    print("1. Adicionar Contato")
+    print("2. Visualizar Contatos")
+    print("3. Editar Contato")
+    print("4. Marcar/Desmarcar Favorito")
+    print("5. Ver Contatos Favoritos")
+    print("6. Apagar Contato")
+    print("7. Sair")
+
+# Função para adicionar um contato
+def adicionar_contato():
+    nome = input("Digite o nome: ")
+    telefone = input("Digite o telefone: ")
+    email = input("Digite o email: ")
+    favorito = input("Deseja marcar como favorito? (s/n): ").lower() == 's'
+    
+    contato = {
+        'nome': nome,
+        'telefone': telefone,
+        'email': email,
+        'favorito': favorito
+    }
+    contatos.append(contato)
+    print("\nContato adicionado com sucesso!")
+
+# Função para visualizar os contatos
+def visualizar_contatos():
+    if not contatos:
+        print("\nNenhum contato cadastrado.")
+        return
+    
+    print("\n--- Lista de Contatos ---")
+    for i, contato in enumerate(contatos):
+        favorito = "(Favorito)" if contato['favorito'] else ""
+        print(f"{i + 1}. {contato['nome']} - Tel: {contato['telefone']} - Email: {contato['email']} {favorito}")
+
+# Função para editar um contato
+def editar_contato():
+    visualizar_contatos()
+    if not contatos:
+        return
+    
+    try:
+        indice = int(input("Digite o número do contato que deseja editar: ")) - 1
+        if 0 <= indice < len(contatos):
+            nome = input(f"Digite o novo nome ({contatos[indice]['nome']}): ") or contatos[indice]['nome']
+            telefone = input(f"Digite o novo telefone ({contatos[indice]['telefone']}): ") or contatos[indice]['telefone']
+            email = input(f"Digite o novo email ({contatos[indice]['email']}): ") or contatos[indice]['email']
+            
+            contatos[indice].update({'nome': nome, 'telefone': telefone, 'email': email})
+            print("\nContato atualizado com sucesso!")
+        else:
+            print("\nContato não encontrado.")
+    except ValueError:
+        print("\nEntrada inválida. Por favor, insira um número válido.")
+
+# Função para marcar/desmarcar um contato como favorito
+def marcar_desmarcar_favorito():
+    visualizar_contatos()
+    if not contatos:
+        return
+    
+    try:
+        indice = int(input("Digite o número do contato que deseja marcar/desmarcar como favorito: ")) - 1
+        if 0 <= indice < len(contatos):
+            contatos[indice]['favorito'] = not contatos[indice]['favorito']
+            status = "favorito" if contatos[indice]['favorito'] else "não favorito"
+            print(f"\nContato marcado como {status}.")
+        else:
+            print("\nContato não encontrado.")
+    except ValueError:
+        print("\nEntrada inválida. Por favor, insira um número válido.")
+
+# Função para ver a lista de contatos favoritos
+def ver_favoritos():
+    favoritos = [contato for contato in contatos if contato['favorito']]
+    if not favoritos:
+        print("\nNenhum contato favorito.")
+        return
+    
+    print("\n--- Lista de Contatos Favoritos ---")
+    for i, contato in enumerate(favoritos):
+        print(f"{i + 1}. {contato['nome']} - Tel: {contato['telefone']} - Email: {contato['email']}")
+
+# Função para apagar um contato
+def apagar_contato():
+    visualizar_contatos()
+    if not contatos:
+        return
+    
+    try:
+        indice = int(input("Digite o número do contato que deseja apagar: ")) - 1
+        if 0 <= indice < len(contatos):
+            contato_removido = contatos.pop(indice)
+            print(f"\nContato '{contato_removido['nome']}' apagado com sucesso!")
+        else:
+            print("\nContato não encontrado.")
+    except ValueError:
+        print("\nEntrada inválida. Por favor, insira um número válido.")
+
+# Função principal para rodar o programa
+def main():
+    while True:
+        exibir_menu()
+        try:
+            opcao = int(input("Digite a opção desejada: "))
+            if opcao == 1:
+                adicionar_contato()
+            elif opcao == 2:
+                visualizar_contatos()
+            elif opcao == 3:
+                editar_contato()
+            elif opcao == 4:
+                marcar_desmarcar_favorito()
+            elif opcao == 5:
+                ver_favoritos()
+            elif opcao == 6:
+                apagar_contato()
+            elif opcao == 7:
+                print("\nSaindo da aplicação...")
+                break
+            else:
+                print("\nOpção inválida. Por favor, escolha uma opção de 1 a 7.")
+        except ValueError:
+            print("\nEntrada inválida. Por favor, insira um número.")
+        input("\nPressione Enter para continuar...")
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+# Iniciar a aplicação
+if __name__ == "__main__":
+    main()
